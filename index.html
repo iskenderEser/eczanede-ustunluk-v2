@@ -1003,6 +1003,7 @@ input[type=number] { -moz-appearance: textfield; }
      SEGMENT SAYFASI
 ══════════════════════════════════════════ -->
 <div id="sayfa-segment" class="sayfa">
+  <div id="stok-uyari-banner" style="display:none;padding:0 20px;max-width:1200px;margin:20px auto 0;"></div>
   <div class="geri-btn" onclick="goster('ana')">← Ana Sayfa</div>
   <div class="seg-container">
 
@@ -1155,7 +1156,14 @@ input[type=number] { -moz-appearance: textfield; }
               <label>Aylık Tüketim TL</label>
               <input type="number" id="inp-tuketim" placeholder="Otomatik" step="0.01" oninput="validateTuketim()">
             </div>
-
+            <div class="add-field">
+              <label>Son Alım Tarihi</label>
+              <input type="date" id="inp-son-alim">
+            </div>
+            <div class="add-field">
+              <label>Günlük Tüketim Adedi</label>
+              <input type="number" id="inp-gunluk-tuketim" placeholder="örn. 3" step="1">
+            </div>
             <!-- Uyarı - tam genişlik -->
             <div class="tl-uyari urun-full" id="tl-uyari" style="display:none;">⚠ Tüketim adedi, sipariş adedini aşamaz.</div>
 
@@ -1701,6 +1709,42 @@ function setSegTip(tip) {
   }
 }
 
+function hesaplaTahminiStok(p) {
+  if (!p.sonAlim || !p.tuketim || !p.gunlukTuketim) return null;
+  const sonAlim = new Date(p.sonAlim);
+  const bitisGun = Math.floor(p.tuketim / p.gunlukTuketim);
+  const bitisTarih = new Date(sonAlim);
+  bitisTarih.setDate(bitisTarih.getDate() + bitisGun);
+  return bitisTarih;
+}
+
+function renderUyariListesi() {
+  const banner = document.getElementById('stok-uyari-banner');
+  if (!banner) return;
+  if (!pharmacies.length) { banner.style.display = 'none'; return; }
+  const bugun = new Date();
+  const hedef = new Date();
+  hedef.setMonth(hedef.getMonth() + 1);
+  const uyarilar = pharmacies.filter(p => {
+    const bitis = hesaplaTahminiStok(p);
+    return bitis && bitis >= bugun && bitis <= hedef;
+  });
+  if (!uyarilar.length) { banner.style.display = 'none'; return; }
+  banner.style.display = 'block';
+  banner.innerHTML = `
+    <div style="background:#fff8e1;border:1px solid #f59e0b;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+      <div style="font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;color:#b45309;margin-bottom:8px;">
+        📅 Bir Sonraki Ay Ziyaret Planına Alınması Önerilen Eczaneler
+      </div>
+      <ul style="font-size:13px;color:#374151;line-height:2;padding-left:16px;">
+        ${uyarilar.map(p =>
+          `<li><strong>${p.name}</strong> — Tahmini stok bitişi: 
+           ${hesaplaTahminiStok(p).toLocaleDateString('tr-TR')}</li>`
+        ).join('')}
+      </ul>
+    </div>`;
+}
+
 function kontrolRx() {
   const ids = ['inp-ahek','inp-ozel','inp-b3','inp-b2','inp-brans'];
   const toplam = ids.reduce((s,id) => s + (parseFloat(document.getElementById(id).value)||0), 0);
@@ -1793,6 +1837,8 @@ function addPharmacy() {
       b2:    parseFloat(document.getElementById('inp-b2').value)    || 0,
       brans: parseFloat(document.getElementById('inp-brans').value) || 0,
     },
+    sonAlim: document.getElementById('inp-son-alim').value,
+    gunlukTuketim: parseFloat(document.getElementById('inp-gunluk-tuketim').value) || 0,
     ciro: ciroRow.ciro, ciroText: ciroRow.text,
     siparis, tuketim, segTip
   });
@@ -1820,6 +1866,8 @@ function addPharmacy() {
   document.getElementById('inp-b2').value = '';
   document.getElementById('inp-brans').value = '';
   document.getElementById('rx-uyari').style.display = 'none';
+  document.getElementById('inp-son-alim').value = '';
+  document.getElementById('inp-gunluk-tuketim').value = '';
   document.getElementById('inp-name').focus();
   render();
 }
@@ -1872,6 +1920,7 @@ function render() {
     `;
     tbody.appendChild(ar);
   }
+  renderUyariListesi();
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && ['inp-name','inp-siparis','inp-tuketim'].includes(document.activeElement.id)) addPharmacy();
