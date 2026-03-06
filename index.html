@@ -172,6 +172,7 @@ body {
 }
 .add-col-sol { padding-right: 32px; }
 .add-col-sag { padding-left: 32px; }
+.add-col-orta { padding-left: 32px; padding-right: 32px; }
 .add-ayrac {
   width: 1px;
   background: #dde1ea;
@@ -989,7 +990,32 @@ input[type=number] { -moz-appearance: textfield; }
             <div class="ciro-estimate" id="ciro-estimate"></div>
           </div>
         </div>
+<!-- YENİ: ZİYARET VE BRICK BİLGİLERİ -->
+        <div class="add-col add-col-orta">
+          <div class="add-col-baslik">Ziyaret Bilgileri</div>
 
+          <div class="add-field">
+            <label>Mega Brick</label>
+            <input type="text" id="inp-brick" placeholder="örn. Kadıköy Kuzey">
+          </div>
+
+          <div class="add-field">
+            <label>6 Aylık Toplam Ziyaret</label>
+            <input type="number" id="inp-ziyaret" placeholder="örn. 12" step="1" oninput="hesaplaZBI()">
+          </div>
+
+          <div class="add-field">
+            <label>Sipariş Alınan Ziyaret</label>
+            <input type="number" id="inp-siparis-ziyaret" placeholder="örn. 8" step="1" oninput="hesaplaZBI()">
+          </div>
+
+          <div class="add-field">
+            <label>Ziyaret Başı Satış İndeksi</label>
+            <input type="text" id="inp-zbi" placeholder="Otomatik" readonly>
+          </div>
+        </div>
+        <!-- AYRAC -->
+        <div class="add-ayrac"></div>
         <!-- AYRAC -->
         <div class="add-ayrac"></div>
 
@@ -1074,6 +1100,8 @@ input[type=number] { -moz-appearance: textfield; }
             <th>Sipariş</th>
             <th>Tüketim</th>
             <th>Seg.</th>
+            <th>Brick</th>
+            <th>ZBİ %</th>
             <th>Ne Yapmalısın?</th>
             <th></th>
           </tr>
@@ -1421,6 +1449,13 @@ function setSegTip(tip) {
   }
 }
 
+function hesaplaZBI() {
+  const z = parseFloat(document.getElementById('inp-ziyaret').value) || 0;
+  const s = parseFloat(document.getElementById('inp-siparis-ziyaret').value) || 0;
+  const el = document.getElementById('inp-zbi');
+  el.value = z ? '%' + ((s / z) * 100).toFixed(1) : '';
+}
+
 function hesaplaTL() {
   if (segTip !== 'urun') return;
   const psf = parseFloat(document.getElementById('inp-psf').value) || 0;
@@ -1478,6 +1513,10 @@ function addPharmacy() {
 
   pharmacies.push({
     id: Date.now(), name, urunAdi,
+    brick: document.getElementById('inp-brick').value.trim(),
+    ziyaret: parseFloat(document.getElementById('inp-ziyaret').value) || 0,
+    siparisZiyaret: parseFloat(document.getElementById('inp-siparis-ziyaret').value) || 0,
+    zbi: parseFloat(document.getElementById('inp-zbi').value) || 0,
     ciro: ciroRow.ciro, ciroText: ciroRow.text,
     siparis, tuketim, segTip
   });
@@ -1495,6 +1534,10 @@ function addPharmacy() {
   document.getElementById('inp-ciro-hizmet').value = '';
   document.getElementById('ciro-estimate').textContent = '';
   document.getElementById('tl-uyari').style.display = 'none';
+  document.getElementById('inp-brick').value = '';
+  document.getElementById('inp-ziyaret').value = '';
+  document.getElementById('inp-siparis-ziyaret').value = '';
+  document.getElementById('inp-zbi').value = '';
   document.getElementById('inp-name').focus();
   render();
 }
@@ -1526,6 +1569,8 @@ function render() {
       <td><span class="tag ${sH?'high':'low'}">${sH?'Yüksek':'Düşük'}</span></td>
       <td><span class="tag ${tH?'high':'low'}">${tH?'Yüksek':'Düşük'}</span></td>
       <td><span class="seg-badge">${seg.n}</span></td>
+      <td>${p.brick || '—'}</td>
+      <td>${p.zbi ? '%' + p.zbi.toFixed(1) : '—'}</td>
       <td class="action-cell">${seg.action}</td>
       <td><button class="btn-del" onclick="del(${p.id})">×</button></td>
     `;
