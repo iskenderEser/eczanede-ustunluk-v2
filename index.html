@@ -938,6 +938,11 @@ input[type=number] { -moz-appearance: textfield; }
       <div class="ana-kart-baslik">ECZANEDE <span>AVANTAJ</span></div>
       <div class="ana-kart-alt">verimlilik için</div>
     </div>
+    <div class="ana-ayrac"></div>
+    <div class="ana-kart" onclick="goster('brick')">
+      <div class="ana-kart-baslik">BRICK <span>YÖNETİM PANELİ</span></div>
+      <div class="ana-kart-alt">performans için</div>
+    </div>
   </div>
 </div>
 
@@ -1042,11 +1047,8 @@ input[type=number] { -moz-appearance: textfield; }
             </div>
           </div>
           <div class="tl-uyari" id="rx-uyari" style="display:none;">⚠ Toplam %100 olmalıdır.</div>
-        </div>        
-        <!-- AYRAC -->
-        <div class="add-ayrac"></div>
-        <!-- AYRAC -->
-        <div class="add-ayrac"></div>
+        </div>    
+
 
         <!-- SAĞ: ÜRÜN BİLGİLERİ -->
         <div class="add-col add-col-sag">
@@ -1142,6 +1144,123 @@ input[type=number] { -moz-appearance: textfield; }
 
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════
+     BRICK YÖNETİM PANELİ
+══════════════════════════════════════════ -->
+<div id="sayfa-brick" class="sayfa">
+  <div class="geri-btn" onclick="goster('ana')">← Ana Sayfa</div>
+  <div class="seg-container">
+
+    <div class="seg-header">
+      <h1>BRICK <span>YÖNETİM PANELİ</span></h1>
+      <p>Bricklerini tanımla, BCG konumunu gör, eczane segmentasyonunu yönet</p>
+    </div>
+
+    <!-- BRICK EKLEME FORMU -->
+    <div class="add-section" id="brick-form-section">
+      <h2>Brick Ekle</h2>
+      <div class="add-section-body">
+        <div class="add-col add-col-sol">
+          <div class="add-col-baslik">Brick Bilgileri</div>
+          <div class="add-field">
+            <label>Brick Adı</label>
+            <input type="text" id="inp-brick-adi" placeholder="örn. Kadıköy Kuzey">
+          </div>
+          <div class="add-field">
+            <label>Brick Toplam TL (Aylık)</label>
+            <input type="number" id="inp-brick-tl" placeholder="örn. 500000" step="0.01">
+          </div>
+          <div class="add-field">
+            <label>Ürün TL (Aylık)</label>
+            <input type="number" id="inp-urun-tl" placeholder="örn. 50000" step="0.01">
+          </div>
+        </div>
+      </div>
+      <div class="add-footer">
+        <div class="form-error" id="brick-form-error">Lütfen tüm alanları doldurun.</div>
+        <button class="btn-add" onclick="addBrick()">EKLE</button>
+      </div>
+    </div>
+
+    <!-- BCG DİYAGRAMI -->
+    <div class="add-section" id="bcg-section" style="display:none;">
+      <h2>BCG Haritası</h2>
+      <div id="bcg-diagram"></div>
+    </div>
+
+    <!-- BRICK LİSTESİ -->
+    <div class="table-wrap" id="brick-table-wrap" style="display:none;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Brick Adı</th>
+            <th>Brick TL</th>
+            <th>Ürün TL</th>
+            <th>BCG Pozisyonu</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="brick-table-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+/* ══════════════════════════════════════════════
+   BCG DİYAGRAMI
+══════════════════════════════════════════════ */
+.bcg-diagram {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.bcg-kuadrant {
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bcg-kuadrant.kazan      { background: rgba(0,125,12,0.08); border: 1px solid rgba(0,125,12,0.25); }
+.bcg-kuadrant.gelistir   { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25); }
+.bcg-kuadrant.koru       { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); }
+.bcg-kuadrant.degerlendir { background: rgba(230,57,70,0.08); border: 1px solid rgba(230,57,70,0.25); }
+.bcg-kuadrant-baslik {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+}
+.bcg-kuadrant.kazan       .bcg-kuadrant-baslik { color: #007d0c; }
+.bcg-kuadrant.gelistir    .bcg-kuadrant-baslik { color: #6366f1; }
+.bcg-kuadrant.koru        .bcg-kuadrant-baslik { color: #d97706; }
+.bcg-kuadrant.degerlendir .bcg-kuadrant-baslik { color: #e63946; }
+.bcg-kuadrant-alt {
+  font-size: 10px;
+  color: #9ca3af;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.bcg-brick-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 2px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.bcg-brick-tag:hover { opacity: 0.75; }
+.bcg-kuadrant.kazan       .bcg-brick-tag { background: rgba(0,125,12,0.15); color: #007d0c; }
+.bcg-kuadrant.gelistir    .bcg-brick-tag { background: rgba(99,102,241,0.15); color: #6366f1; }
+.bcg-kuadrant.koru        .bcg-brick-tag { background: rgba(245,158,11,0.15); color: #d97706; }
+.bcg-kuadrant.degerlendir .bcg-brick-tag { background: rgba(230,57,70,0.15); color: #e63946; }
 
 <!-- ══════════════════════════════════════════
      AVANTAJ SAYFASI
@@ -1364,6 +1483,106 @@ input[type=number] { -moz-appearance: textfield; }
 function goster(sayfa) {
   document.querySelectorAll('.sayfa').forEach(s => s.classList.remove('aktif'));
   document.getElementById('sayfa-' + sayfa).classList.add('aktif');
+}
+
+// ══════════════════════════════════════════════
+// BRICK YÖNETİM PANELİ JS
+// ══════════════════════════════════════════════
+let bricks = [];
+
+function addBrick() {
+  const adi    = document.getElementById('inp-brick-adi').value.trim();
+  const brTL   = parseFloat(document.getElementById('inp-brick-tl').value);
+  const urunTL = parseFloat(document.getElementById('inp-urun-tl').value);
+  const err    = document.getElementById('brick-form-error');
+
+  if (!adi || isNaN(brTL) || isNaN(urunTL)) {
+    err.classList.add('show'); return;
+  }
+  err.classList.remove('show');
+
+  bricks.push({
+    id: Date.now(),
+    adi, brTL, urunTL
+  });
+
+  document.getElementById('inp-brick-adi').value = '';
+  document.getElementById('inp-brick-tl').value  = '';
+  document.getElementById('inp-urun-tl').value   = '';
+  document.getElementById('inp-brick-adi').focus();
+
+  renderBricks();
+}
+
+function getBCGKuadrant(brick, ortBrTL, ortUrunTL) {
+  const brYuksek   = brick.brTL   >= ortBrTL;
+  const urunYuksek = brick.urunTL >= ortUrunTL;
+  if (brYuksek && urunYuksek)   return { label: 'KAZAN',        cls: 'kazan',       alt: 'Brick TL ↑  Ürün TL ↑' };
+  if (brYuksek && !urunYuksek)  return { label: 'GELİŞTİR',     cls: 'gelistir',    alt: 'Brick TL ↑  Ürün TL ↓' };
+  if (!brYuksek && urunYuksek)  return { label: 'KORU',         cls: 'koru',        alt: 'Brick TL ↓  Ürün TL ↑' };
+  return                                { label: 'DEĞERLENDİR', cls: 'degerlendir', alt: 'Brick TL ↓  Ürün TL ↓' };
+}
+
+function renderBricks() {
+  if (!bricks.length) {
+    document.getElementById('bcg-section').style.display        = 'none';
+    document.getElementById('brick-table-wrap').style.display   = 'none';
+    return;
+  }
+
+  document.getElementById('bcg-section').style.display        = 'block';
+  document.getElementById('brick-table-wrap').style.display   = 'block';
+
+  const ortBrTL   = bricks.reduce((s,b) => s + b.brTL,   0) / bricks.length;
+  const ortUrunTL = bricks.reduce((s,b) => s + b.urunTL, 0) / bricks.length;
+
+  // BCG Diyagram
+  const kuadrantlar = ['kazan','gelistir','koru','degerlendir'];
+  const kuadrantBilgi = {
+    kazan:        { label: 'KAZAN',        alt: 'Brick TL ↑  Ürün TL ↑' },
+    gelistir:     { label: 'GELİŞTİR',     alt: 'Brick TL ↑  Ürün TL ↓' },
+    koru:         { label: 'KORU',         alt: 'Brick TL ↓  Ürün TL ↑' },
+    degerlendir:  { label: 'DEĞERLENDİR',  alt: 'Brick TL ↓  Ürün TL ↓' },
+  };
+
+  let bcgHTML = '<div class="bcg-diagram">';
+  kuadrantlar.forEach(cls => {
+    const info = kuadrantBilgi[cls];
+    const ilgiliBrickler = bricks.filter(b => getBCGKuadrant(b, ortBrTL, ortUrunTL).cls === cls);
+    const brickTaglar = ilgiliBrickler.map(b =>
+      `<span class="bcg-brick-tag">${b.adi}</span>`
+    ).join('');
+    bcgHTML += `
+      <div class="bcg-kuadrant ${cls}">
+        <div class="bcg-kuadrant-baslik">${info.label}</div>
+        <div class="bcg-kuadrant-alt">${info.alt}</div>
+        ${brickTaglar || '<span style="font-size:12px;color:#c0c8d8;">—</span>'}
+      </div>`;
+  });
+  bcgHTML += '</div>';
+  document.getElementById('bcg-diagram').innerHTML = bcgHTML;
+
+  // Brick Tablosu
+  const tbody = document.getElementById('brick-table-body');
+  tbody.innerHTML = '';
+  bricks.forEach((b, i) => {
+    const bcg = getBCGKuadrant(b, ortBrTL, ortUrunTL);
+    const tr  = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:#9ca3af;font-size:12px">${i+1}</td>
+      <td style="font-weight:500">${b.adi}</td>
+      <td>${fmtSeg(b.brTL)}</td>
+      <td>${fmtSeg(b.urunTL)}</td>
+      <td><span class="tag ${bcg.cls === 'kazan' ? 'high' : bcg.cls === 'degerlendir' ? 'low' : 'mid'}">${bcg.label}</span></td>
+      <td><button class="btn-del" onclick="delBrick(${b.id})">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function delBrick(id) {
+  bricks = bricks.filter(b => b.id !== id);
+  renderBricks();
 }
 
 // ══════════════════════════════════════════════
