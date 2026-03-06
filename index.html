@@ -1006,7 +1006,14 @@ input[type=number] { -moz-appearance: textfield; }
   <div id="stok-uyari-banner" style="display:none;padding:0 20px;max-width:1200px;margin:20px auto 0;"></div>
   <div class="geri-btn" onclick="goster('ana')">← Ana Sayfa</div>
   <div class="seg-container">
-
+      <!-- UTU DEVİR YÖNETİMİ -->
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <button class="btn-add" onclick="veriAktar()">📥 VERİ AKTAR</button>
+      <button class="btn-add" style="background:#6b7280;" onclick="document.getElementById('inp-yukle').click()">
+        📤 VERİ YÜKLE
+      </button>
+      <input type="file" id="inp-yukle" accept=".json" style="display:none;" onchange="veriYukle(this)">
+    </div>
     <div class="seg-header">
       <h1>ECZANEDE <span>ÜSTÜNLÜK</span></h1>
       <p>Eczaneleri listeye ekle — sistem portföy ortalamasına göre her eczane için segmenti ve öneriyi otomatik belirler</p>
@@ -1743,6 +1750,37 @@ function renderUyariListesi() {
         ).join('')}
       </ul>
     </div>`;
+}
+
+function veriAktar() {
+  const veri = {
+    olusturulma: new Date().toISOString(),
+    eczaneler: pharmacies
+  };
+  const blob = new Blob([JSON.stringify(veri, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'eczane-portfoyu-' + new Date().toLocaleDateString('tr-TR').replace(/\./g,'-') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function veriYukle(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const veri = JSON.parse(e.target.result);
+      pharmacies = veri.eczaneler || [];
+      render();
+      alert(pharmacies.length + ' eczane başarıyla yüklendi.');
+    } catch(err) {
+      alert('Geçersiz dosya formatı.');
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
 }
 
 function kontrolRx() {
