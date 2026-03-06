@@ -1320,6 +1320,7 @@ input[type=number] { -moz-appearance: textfield; }
                   <div class="girdi-etiket-cell separator">— Satış Bilgileri —</div>
                   <div class="girdi-etiket-cell">Satış Adedi</div>
                   <div class="girdi-etiket-cell">MF</div>
+                  <div class="girdi-etiket-cell">İskonto %</div>
                   <div class="girdi-etiket-cell">Satış Şartlı DSF</div>
                   <div class="girdi-etiket-cell separator">— Finansal —</div>
                   <div class="girdi-etiket-cell">Satış Vadesi<span style="display:block;font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;margin-top:2px;margin-left:3px;">(gün)</span></div>
@@ -1360,6 +1361,7 @@ input[type=number] { -moz-appearance: textfield; }
                   <div class="girdi-input-cell separator"></div>
                   <div class="girdi-input-cell"><input type="number" id="u0-satis-adet" placeholder="örn. 100" step="1" oninput="hesaplaOTS(); hesaplaFISS(); hesaplaSatisSartliDSF();"></div>
                   <div class="girdi-input-cell"><input type="text" id="u0-mf" placeholder="örn. 10" oninput="hesaplaOTS(); hesaplaSatisSartliDSF();"></div>
+                  <div class="girdi-input-cell"><input type="number" id="u0-iskonto" placeholder="örn. 10" step="0.01" oninput="hesaplaSatisSartliDSF(); hesaplaCiktilar();"></div>
                   <div class="girdi-input-cell"><input type="text" id="u0-satis-sartli-dsf" placeholder="Otomatik" readonly></div>
                   <div class="girdi-input-cell separator"></div>
                   <div class="girdi-input-cell"><input type="number" id="u0-vade" placeholder="örn. 90" step="1" oninput="hesaplaCiktilar();"></div>
@@ -2011,6 +2013,7 @@ function girdiSutunHTML(p, isim, renk) {
     <div class="girdi-input-cell separator"></div>
     <div class="girdi-input-cell"><input type="number" id="${p}-satis-adet" placeholder="örn. 100" step="1" oninput="hesaplaOTSP('${p}'); hesaplaFISSP('${p}'); hesaplaSatisSartliDSFP('${p}');"></div>
     <div class="girdi-input-cell"><input type="text" id="${p}-mf" placeholder="örn. 10" oninput="hesaplaOTSP('${p}'); hesaplaSatisSartliDSFP('${p}');"></div>
+    <div class="girdi-input-cell"><input type="number" id="${p}-iskonto" placeholder="örn. 10" step="0.01" oninput="hesaplaSatisSartliDSFP('${p}'); hesaplaCiktilarP('${p}');"></div>
     <div class="girdi-input-cell"><input type="text" id="${p}-satis-sartli-dsf" placeholder="Otomatik" readonly></div>
     <div class="girdi-input-cell separator"></div>
     <div class="girdi-input-cell"><input type="number" id="${p}-vade" placeholder="örn. 90" step="1" oninput="hesaplaCiktilarP('${p}');"></div>
@@ -2135,10 +2138,32 @@ function hesaplaKamuDSFP(p, dsfParam) {
 function hesaplaSatisSartliDSFP(p) {
   const satisAdet = parseFloat(document.getElementById(p+'-satis-adet').value) || 0;
   const mf        = parseFloat(document.getElementById(p+'-mf').value) || 0;
+  const iskontoEl = document.getElementById(p+'-iskonto');
+  const iskonto   = iskontoEl ? (parseFloat(iskontoEl.value) || 0) : 0;
   const dsf       = modGeriOdemsiz ? (parseFloat(document.getElementById(p+'-dsf').value) || 0) : parseTL(p+'-kamu-dsf');
+
+  // MF ve iskonto birbirini devre dışı bırakır
+  if (mf && iskontoEl) { iskontoEl.disabled = true; iskontoEl.style.background = '#f5f7fa'; }
+  else if (iskontoEl)  { iskontoEl.disabled = false; iskontoEl.style.background = ''; }
+  if (iskonto && document.getElementById(p+'-mf')) {
+    document.getElementById(p+'-mf').disabled = true;
+    document.getElementById(p+'-mf').style.background = '#f5f7fa';
+  } else if (document.getElementById(p+'-mf')) {
+    document.getElementById(p+'-mf').disabled = false;
+    document.getElementById(p+'-mf').style.background = '';
+  }
+
   if (satisAdet && dsf) {
-    setTL(p+'-satis-sartli-dsf', (satisAdet * dsf) / (satisAdet + mf));
-  } else { const el = document.getElementById(p+'-satis-sartli-dsf'); if (el) el.value = ''; }
+    let satisSartli;
+    if (iskonto) {
+      satisSartli = dsf * (1 - iskonto / 100);
+    } else {
+      satisSartli = mf ? (satisAdet * dsf) / (satisAdet + mf) : dsf;
+    }
+    setTL(p+'-satis-sartli-dsf', satisSartli);
+  } else {
+    const el = document.getElementById(p+'-satis-sartli-dsf'); if (el) el.value = '';
+  }
   hesaplaCiktilarP(p);
 }
 
@@ -2289,6 +2314,12 @@ function toggleMod() {
 // ── TEMİZLE ──────────────────────────────────────────────────────────────
 function temizle() {
   const kapsam = document;
+  ['u0','u1','u2'].forEach(p => {
+    const iskEl = document.getElementById(p+'-iskonto');
+    const mfEl  = document.getElementById(p+'-mf');
+    if (iskEl) { iskEl.disabled = false; iskEl.style.background = ''; }
+    if (mfEl)  { mfEl.disabled  = false; mfEl.style.background  = ''; }
+  });
   kapsam.querySelectorAll('input:not([readonly]), select').forEach(el => {
     if (el.tagName === 'SELECT') el.selectedIndex = 0;
     else el.value = '';
