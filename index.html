@@ -173,6 +173,7 @@ body {
 .add-col-sol { padding-right: 32px; }
 .add-col-sag { padding-left: 32px; }
 .add-col-orta { padding-left: 32px; padding-right: 32px; }
+.add-col-rx { padding-left: 32px; padding-right: 32px; }
 .add-ayrac {
   width: 1px;
   background: #dde1ea;
@@ -1014,6 +1015,34 @@ input[type=number] { -moz-appearance: textfield; }
             <input type="text" id="inp-zbi" placeholder="Otomatik" readonly>
           </div>
         </div>
+<!-- YENİ: RX KAYNAK DAĞILIMI -->
+        <div class="add-col add-col-rx">
+          <div class="add-col-baslik">Rx Kaynak Dağılımı (%100)</div>
+
+          <div class="urun-form-grid">
+            <div class="add-field">
+              <label>AHEK %</label>
+              <input type="number" id="inp-ahek" placeholder="0" step="1" oninput="kontrolRx()">
+            </div>
+            <div class="add-field">
+              <label>Özel Hastane %</label>
+              <input type="number" id="inp-ozel" placeholder="0" step="1" oninput="kontrolRx()">
+            </div>
+            <div class="add-field">
+              <label>3. Basamak %</label>
+              <input type="number" id="inp-b3" placeholder="0" step="1" oninput="kontrolRx()">
+            </div>
+            <div class="add-field">
+              <label>2. Basamak %</label>
+              <input type="number" id="inp-b2" placeholder="0" step="1" oninput="kontrolRx()">
+            </div>
+            <div class="add-field urun-full">
+              <label>Branş Hastanesi %</label>
+              <input type="number" id="inp-brans" placeholder="0" step="1" oninput="kontrolRx()">
+            </div>
+          </div>
+          <div class="tl-uyari" id="rx-uyari" style="display:none;">⚠ Toplam %100 olmalıdır.</div>
+        </div>        
         <!-- AYRAC -->
         <div class="add-ayrac"></div>
         <!-- AYRAC -->
@@ -1100,6 +1129,7 @@ input[type=number] { -moz-appearance: textfield; }
             <th>Sipariş</th>
             <th>Tüketim</th>
             <th>Seg.</th>
+            <th>Rx Tipi</th>
             <th>Brick</th>
             <th>ZBİ %</th>
             <th>Ne Yapmalısın?</th>
@@ -1449,6 +1479,23 @@ function setSegTip(tip) {
   }
 }
 
+function kontrolRx() {
+  const ids = ['inp-ahek','inp-ozel','inp-b3','inp-b2','inp-brans'];
+  const toplam = ids.reduce((s,id) => s + (parseFloat(document.getElementById(id).value)||0), 0);
+  const uyari = document.getElementById('rx-uyari');
+  uyari.style.display = (toplam > 0 && toplam !== 100) ? 'block' : 'none';
+}
+
+function getRxSegment(rx) {
+  const max = Math.max(rx.ahek, rx.ozel, rx.b3, rx.b2, rx.brans);
+  if (max === 0) return '—';
+  if (max === rx.ahek)  return 'AHEK';
+  if (max === rx.ozel)  return 'Özel Hastane';
+  if (max === rx.b3)    return '3. Basamak';
+  if (max === rx.b2)    return '2. Basamak';
+  return 'Branş';
+}
+
 function hesaplaZBI() {
   const z = parseFloat(document.getElementById('inp-ziyaret').value) || 0;
   const s = parseFloat(document.getElementById('inp-siparis-ziyaret').value) || 0;
@@ -1517,6 +1564,13 @@ function addPharmacy() {
     ziyaret: parseFloat(document.getElementById('inp-ziyaret').value) || 0,
     siparisZiyaret: parseFloat(document.getElementById('inp-siparis-ziyaret').value) || 0,
     zbi: parseFloat(document.getElementById('inp-zbi').value) || 0,
+    rx: {
+      ahek:  parseFloat(document.getElementById('inp-ahek').value)  || 0,
+      ozel:  parseFloat(document.getElementById('inp-ozel').value)  || 0,
+      b3:    parseFloat(document.getElementById('inp-b3').value)    || 0,
+      b2:    parseFloat(document.getElementById('inp-b2').value)    || 0,
+      brans: parseFloat(document.getElementById('inp-brans').value) || 0,
+    },
     ciro: ciroRow.ciro, ciroText: ciroRow.text,
     siparis, tuketim, segTip
   });
@@ -1538,6 +1592,12 @@ function addPharmacy() {
   document.getElementById('inp-ziyaret').value = '';
   document.getElementById('inp-siparis-ziyaret').value = '';
   document.getElementById('inp-zbi').value = '';
+  document.getElementById('inp-ahek').value = '';
+  document.getElementById('inp-ozel').value = '';
+  document.getElementById('inp-b3').value = '';
+  document.getElementById('inp-b2').value = '';
+  document.getElementById('inp-brans').value = '';
+  document.getElementById('rx-uyari').style.display = 'none';
   document.getElementById('inp-name').focus();
   render();
 }
@@ -1569,6 +1629,7 @@ function render() {
       <td><span class="tag ${sH?'high':'low'}">${sH?'Yüksek':'Düşük'}</span></td>
       <td><span class="tag ${tH?'high':'low'}">${tH?'Yüksek':'Düşük'}</span></td>
       <td><span class="seg-badge">${seg.n}</span></td>
+      <td>${p.rx ? getRxSegment(p.rx) : '—'}</td>
       <td>${p.brick || '—'}</td>
       <td>${p.zbi ? '%' + p.zbi.toFixed(1) : '—'}</td>
       <td class="action-cell">${seg.action}</td>
