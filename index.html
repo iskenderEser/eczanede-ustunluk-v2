@@ -1640,7 +1640,7 @@ function populateCiroSelect(el, tip) {
   if (el.options.length > 1) return;
   el.innerHTML = '<option value="">— Seçiniz —</option>';
   const table = tip === 'iskonto' ? ISKONTO_TABLE : HIZMET_TABLE;
-  table.forEach(r => {
+  table.forEach((r, i) => {
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = r.label;
