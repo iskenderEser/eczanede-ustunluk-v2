@@ -1594,7 +1594,7 @@ function renderEczaneListesi(brickId) {
         <td style="padding:8px;">${p.rx ? getRxSegment(p.rx) : '—'}</td>
         <td style="padding:8px;">${p.zbi ? '%' + p.zbi.toFixed(1) : '—'}</td>
         <td style="padding:8px;"><span class="tag ${seg.cls}">${seg.label}</span></td>
-        <td style="padding:8px;font-size:11px;">${seg.text}</td>
+        <td style="padding:8px;font-size:11px;">${seg.action}</td>
         <td style="padding:8px;"><button class="btn-del" onclick="delEczane(${brickId}, ${p.id})">×</button></td>
       </tr>`;
   });
