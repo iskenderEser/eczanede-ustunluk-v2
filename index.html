@@ -974,6 +974,16 @@ input[type=number] { -moz-appearance: textfield; }
 </head>
 <body>
 
+<script>
+// ══════════════════════════════════════════════
+// SAYFA YÖNETİMİ
+// ══════════════════════════════════════════════
+function goster(sayfa) {
+  document.querySelectorAll('.sayfa').forEach(s => s.classList.remove('aktif'));
+  document.getElementById('sayfa-' + sayfa).classList.add('aktif');
+}
+</script> 
+
 <!-- ══════════════════════════════════════════
      ANA SAYFA
 ══════════════════════════════════════════ -->
@@ -1285,14 +1295,6 @@ input[type=number] { -moz-appearance: textfield; }
   </div>
 </div>
 
-<script>
-// ══════════════════════════════════════════════
-// SAYFA YÖNETİMİ
-// ══════════════════════════════════════════════
-function goster(sayfa) {
-  document.querySelectorAll('.sayfa').forEach(s => s.classList.remove('aktif'));
-  document.getElementById('sayfa-' + sayfa).classList.add('aktif');
-}
 
 // ══════════════════════════════════════════════
 // BRICK YÖNETİM PANELİ JS
