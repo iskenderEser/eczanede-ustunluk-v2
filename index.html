@@ -1642,7 +1642,7 @@ function populateCiroSelect(el, tip) {
   const table = tip === 'iskonto' ? ISKONTO_TABLE : HIZMET_TABLE;
   table.forEach(r => {
     const opt = document.createElement('option');
-    opt.value = r.ciro;
+    opt.value = i;
     opt.textContent = r.label;
     el.appendChild(opt);
   });
