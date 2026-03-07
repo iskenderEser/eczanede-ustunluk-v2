@@ -981,12 +981,6 @@ input[type=number] { -moz-appearance: textfield; }
   <div class="ana-baslik">
     <span style="color:#737373;">ECZANEDE</span> <span>ÜSTÜNLÜK</span>
   </div>
-  <div class="ana-kartlar">
-    <div class="ana-kart" onclick="goster('segment')">
-      <div class="ana-kart-baslik">ECZANE <span>SEGMENTASYONU</span></div>
-      <div class="ana-kart-alt">etkililik için</div>
-    </div>
-    <div class="ana-ayrac"></div>
     <div class="ana-kart" onclick="goster('avantaj')">
       <div class="ana-kart-baslik">ECZANEDE <span>AVANTAJ</span></div>
       <div class="ana-kart-alt">verimlilik için</div>
@@ -1000,13 +994,13 @@ input[type=number] { -moz-appearance: textfield; }
 </div>
 
 <!-- ══════════════════════════════════════════
-     SEGMENT SAYFASI
+     BRICK YÖNETİM PANELİ
 ══════════════════════════════════════════ -->
-<div id="sayfa-segment" class="sayfa">
-  <div id="stok-uyari-banner" style="display:none;padding:0 20px;max-width:1200px;margin:20px auto 0;"></div>
+<div id="sayfa-brick" class="sayfa">
   <div class="geri-btn" onclick="goster('ana')">← Ana Sayfa</div>
   <div class="seg-container">
-      <!-- UTU DEVİR YÖNETİMİ -->
+
+   <!-- UTU DEVİR YÖNETİMİ -->
     <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
       <button class="btn-add" onclick="veriAktar()">📥 VERİ AKTAR</button>
       <button class="btn-add" style="background:#6b7280;" onclick="document.getElementById('inp-yukle').click()">
@@ -1014,211 +1008,6 @@ input[type=number] { -moz-appearance: textfield; }
       </button>
       <input type="file" id="inp-yukle" accept=".json" style="display:none;" onchange="veriYukle(this)">
     </div>
-    <div class="seg-header">
-      <h1>ECZANEDE <span>ÜSTÜNLÜK</span></h1>
-      <p>Eczaneleri listeye ekle — sistem portföy ortalamasına göre her eczane için segmenti ve öneriyi otomatik belirler</p>
-    </div>
-
-    <div class="add-section">
-      <h2>Eczane Ekle</h2>
-      <div class="add-section-body">
-
-        <!-- SOL: ECZANE BİLGİLERİ -->
-        <div class="add-col add-col-sol">
-          <div class="add-col-baslik">Eczane Bilgileri</div>
-
-          <div class="add-field">
-            <label>Eczane Adı</label>
-            <input type="text" id="inp-name" placeholder="örn. Güven Eczanesi">
-          </div>
-
-          <div class="add-field">
-            <label>Yıllık Tahmini Ciro</label>
-            <div class="ciro-secenekler">
-              <div class="ciro-secenek" id="ciro-iskonto-wrap">
-                <div class="ciro-secenek-baslik" onclick="setCiroMethod('iskonto')">
-                  <div class="ciro-radio" id="radio-iskonto"></div>
-                  <span>iskonto oranına göre</span>
-                </div>
-                <select id="inp-ciro-iskonto" onchange="updateEstimate()" disabled>
-                  <option value="">— Seçiniz —</option>
-                </select>
-              </div>
-              <div class="ciro-secenek" id="ciro-hizmet-wrap">
-                <div class="ciro-secenek-baslik" onclick="setCiroMethod('hizmet')">
-                  <div class="ciro-radio" id="radio-hizmet"></div>
-                  <span>hizmet bedeline göre</span>
-                </div>
-                <select id="inp-ciro-hizmet" onchange="updateEstimate()" disabled>
-                  <option value="">— Seçiniz —</option>
-                </select>
-              </div>
-            </div>
-            <div class="ciro-estimate" id="ciro-estimate"></div>
-          </div>
-        </div>
-<!-- YENİ: ZİYARET VE BRICK BİLGİLERİ -->
-        <div class="add-col add-col-orta">
-          <div class="add-col-baslik">Ziyaret Bilgileri</div>
-
-          <div class="add-field">
-            <label>Mega Brick</label>
-            <input type="text" id="inp-brick" placeholder="örn. Kadıköy Kuzey">
-          </div>
-
-          <div class="add-field">
-            <label>6 Aylık Toplam Ziyaret</label>
-            <input type="number" id="inp-ziyaret" placeholder="örn. 12" step="1" oninput="hesaplaZBI()">
-          </div>
-
-          <div class="add-field">
-            <label>Sipariş Alınan Ziyaret</label>
-            <input type="number" id="inp-siparis-ziyaret" placeholder="örn. 8" step="1" oninput="hesaplaZBI()">
-          </div>
-
-          <div class="add-field">
-            <label>Ziyaret Başı Satış İndeksi</label>
-            <input type="text" id="inp-zbi" placeholder="Otomatik" readonly>
-          </div>
-        </div>
-<!-- YENİ: RX KAYNAK DAĞILIMI -->
-        <div class="add-col add-col-rx">
-          <div class="add-col-baslik">Rx Kaynak Dağılımı (%100)</div>
-
-          <div class="urun-form-grid">
-            <div class="add-field">
-              <label>AHEK %</label>
-              <input type="number" id="inp-ahek" placeholder="0" step="1" oninput="kontrolRx()">
-            </div>
-            <div class="add-field">
-              <label>Özel Hastane %</label>
-              <input type="number" id="inp-ozel" placeholder="0" step="1" oninput="kontrolRx()">
-            </div>
-            <div class="add-field">
-              <label>3. Basamak %</label>
-              <input type="number" id="inp-b3" placeholder="0" step="1" oninput="kontrolRx()">
-            </div>
-            <div class="add-field">
-              <label>2. Basamak %</label>
-              <input type="number" id="inp-b2" placeholder="0" step="1" oninput="kontrolRx()">
-            </div>
-            <div class="add-field urun-full">
-              <label>Branş Hastanesi %</label>
-              <input type="number" id="inp-brans" placeholder="0" step="1" oninput="kontrolRx()">
-            </div>
-          </div>
-          <div class="tl-uyari" id="rx-uyari" style="display:none;">⚠ Toplam %100 olmalıdır.</div>
-        </div>    
-
-
-        <!-- SAĞ: ÜRÜN BİLGİLERİ -->
-        <div class="add-col add-col-sag">
-          <div class="add-col-baslik">Ürün Bilgileri</div>
-
-          <div class="seg-tip-secim">
-            <label class="seg-tip-label" onclick="setSegTip('urun')">
-              <div class="ciro-radio" id="radio-seg-urun" class="aktif"></div>
-              <span>Ürüne Göre Segmentasyon</span>
-            </label>
-            <label class="seg-tip-label" onclick="setSegTip('tl')">
-              <div class="ciro-radio" id="radio-seg-tl"></div>
-              <span>TL'ye Göre Segmentasyon</span>
-            </label>
-          </div>
-
-          <div class="urun-form-grid">
-
-            <!-- Ürün Adı - tam genişlik -->
-            <div class="add-field urun-full">
-              <label>Ürün Adı</label>
-              <input type="text" id="inp-urun-adi" placeholder="örn. Majezik">
-            </div>
-
-            <!-- PSF + DSF yan yana -->
-            <div class="add-field" id="field-psf">
-              <label>PSF (KDV Dahil)</label>
-              <input type="number" id="inp-psf" placeholder="örn. 250.00" step="0.01" oninput="hesaplaTL()">
-            </div>
-            <div class="add-field" id="field-dsf">
-              <label>DSF (KDV Dahil)</label>
-              <input type="number" id="inp-dsf" placeholder="örn. 200.00" step="0.01" oninput="hesaplaTL()">
-            </div>
-
-            <!-- Sipariş Adedi + Tüketim Adedi yan yana -->
-            <div class="add-field" id="field-sip-adet">
-              <label>Aylık Sipariş Adedi</label>
-              <input type="number" id="inp-siparis-adet" placeholder="örn. 50" step="1" oninput="hesaplaTL()">
-            </div>
-            <div class="add-field" id="field-tuk-adet">
-              <label>Aylık Tüketim Adedi</label>
-              <input type="number" id="inp-tuketim-adet" placeholder="örn. 40" step="1" oninput="hesaplaTL()">
-            </div>
-
-            <!-- Sipariş TL + Tüketim TL yan yana -->
-            <div class="add-field">
-              <label>Aylık Sipariş TL</label>
-              <input type="number" id="inp-siparis" placeholder="Otomatik" step="0.01" oninput="validateTuketim()">
-            </div>
-            <div class="add-field">
-              <label>Aylık Tüketim TL</label>
-              <input type="number" id="inp-tuketim" placeholder="Otomatik" step="0.01" oninput="validateTuketim()">
-            </div>
-            <div class="add-field">
-              <label>Son Alım Tarihi</label>
-              <input type="date" id="inp-son-alim">
-            </div>
-            <div class="add-field">
-              <label>Günlük Tüketim Adedi</label>
-              <input type="number" id="inp-gunluk-tuketim" placeholder="örn. 3" step="1">
-            </div>
-            <!-- Uyarı - tam genişlik -->
-            <div class="tl-uyari urun-full" id="tl-uyari" style="display:none;">⚠ Tüketim adedi, sipariş adedini aşamaz.</div>
-
-          </div>
-        </div>
-
-      </div>
-
-      <div class="add-footer">
-        <div class="form-error" id="form-error">Lütfen tüm alanları doldurun.</div>
-        <button class="btn-add" onclick="addPharmacy()">EKLE</button>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Eczane Adı</th>
-            <th>Tahmini Ciro</th>
-            <th>Ciro Kaynağı</th>
-            <th>Sipariş TL</th>
-            <th>Tüketim TL</th>
-            <th>Ciro</th>
-            <th>Sipariş</th>
-            <th>Tüketim</th>
-            <th>Seg.</th>
-            <th>Rx Tipi</th>
-            <th>Brick</th>
-            <th>ZBİ %</th>
-            <th>Ne Yapmalısın?</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-      </table>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     BRICK YÖNETİM PANELİ
-══════════════════════════════════════════ -->
-<div id="sayfa-brick" class="sayfa">
-  <div class="geri-btn" onclick="goster('ana')">← Ana Sayfa</div>
-  <div class="seg-container">
 
     <div class="seg-header">
       <h1>BRICK <span>YÖNETİM PANELİ</span></h1>
@@ -1267,6 +1056,7 @@ input[type=number] { -moz-appearance: textfield; }
             <th>Brick TL</th>
             <th>Ürün TL</th>
             <th>BCG Pozisyonu</th>
+             <th>Eczaneler</th>
             <th></th>
           </tr>
         </thead>
@@ -1522,6 +1312,7 @@ function addBrick() {
   bricks.push({
     id: Date.now(),
     adi, brTL, urunTL
+    eczaneler: []
   });
 
   document.getElementById('inp-brick-adi').value = '';
@@ -1586,12 +1377,14 @@ function renderBricks() {
   bricks.forEach((b, i) => {
     const bcg = getBCGKuadrant(b, ortBrTL, ortUrunTL);
     const tr  = document.createElement('tr');
+    tr.setAttribute('data-brick-id', b.id);
     tr.innerHTML = `
       <td style="color:#9ca3af;font-size:12px">${i+1}</td>
       <td style="font-weight:500">${b.adi}</td>
       <td>${fmtSeg(b.brTL)}</td>
       <td>${fmtSeg(b.urunTL)}</td>
       <td><span class="tag ${bcg.cls === 'kazan' ? 'high' : bcg.cls === 'degerlendir' ? 'low' : 'mid'}">${bcg.label}</span></td>
+      <td><button class="btn-add" style="font-size:12px;padding:4px 12px;" onclick="toggleEczaneForm(${b.id})">Eczaneler</button></td>
       <td><button class="btn-del" onclick="delBrick(${b.id})">×</button></td>
     `;
     tbody.appendChild(tr);
@@ -1601,6 +1394,417 @@ function renderBricks() {
 function delBrick(id) {
   bricks = bricks.filter(b => b.id !== id);
   renderBricks();
+}
+
+function toggleEczaneForm(brickId) {
+  const existing = document.getElementById('eczane-form-' + brickId);
+  if (existing) { existing.remove(); return; }
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  const row = document.querySelector(`tr[data-brick-id="${brickId}"]`);
+  if (!row) return;
+  const formRow = document.createElement('tr');
+  formRow.id = 'eczane-form-' + brickId;
+  formRow.innerHTML = `
+    <td colspan="7" style="padding:20px;background:#f8fafc;">
+      <div style="font-family:'Bebas Neue';font-size:16px;letter-spacing:1px;margin-bottom:12px;">
+        ${brick.adi} — Eczane Ekle
+      </div>
+      <div class="add-section" style="margin-bottom:16px;">
+        <div class="add-section-body">
+          <div class="add-col add-col-sol">
+            <div class="add-col-baslik">Eczane Bilgileri</div>
+            <div class="add-field">
+              <label>Eczane Adı</label>
+              <input type="text" id="b${brickId}-inp-name" placeholder="örn. Güven Eczanesi">
+            </div>
+            <div class="add-field">
+              <label>Yıllık Tahmini Ciro</label>
+              <div class="ciro-secenekler">
+                <div class="ciro-secenek">
+                  <div class="ciro-secenek-baslik" onclick="setCiroMethodB(${brickId}, 'iskonto')">
+                    <div class="ciro-radio" id="b${brickId}-radio-iskonto"></div>
+                    <span>iskonto oranına göre</span>
+                  </div>
+                  <select id="b${brickId}-inp-ciro-iskonto" onchange="updateEstimateB(${brickId})" disabled></select>
+                </div>
+                <div class="ciro-secenek">
+                  <div class="ciro-secenek-baslik" onclick="setCiroMethodB(${brickId}, 'hizmet')">
+                    <div class="ciro-radio" id="b${brickId}-radio-hizmet"></div>
+                    <span>hizmet bedeline göre</span>
+                  </div>
+                  <select id="b${brickId}-inp-ciro-hizmet" onchange="updateEstimateB(${brickId})" disabled></select>
+                </div>
+              </div>
+              <div class="ciro-estimate" id="b${brickId}-ciro-estimate"></div>
+            </div>
+          </div>
+          <div class="add-col add-col-orta">
+            <div class="add-col-baslik">Ziyaret Bilgileri</div>
+            <div class="add-field">
+              <label>6 Aylık Toplam Ziyaret</label>
+              <input type="number" id="b${brickId}-inp-ziyaret" placeholder="örn. 12" step="1" oninput="hesaplaZBIB(${brickId})">
+            </div>
+            <div class="add-field">
+              <label>Sipariş Alınan Ziyaret</label>
+              <input type="number" id="b${brickId}-inp-siparis-ziyaret" placeholder="örn. 8" step="1" oninput="hesaplaZBIB(${brickId})">
+            </div>
+            <div class="add-field">
+              <label>Ziyaret Başı Satış İndeksi</label>
+              <input type="text" id="b${brickId}-inp-zbi" placeholder="Otomatik" readonly>
+            </div>
+          </div>
+          <div class="add-col add-col-rx">
+            <div class="add-col-baslik">Rx Kaynak Dağılımı (%100)</div>
+            <div class="urun-form-grid">
+              <div class="add-field">
+                <label>AHEK %</label>
+                <input type="number" id="b${brickId}-inp-ahek" placeholder="0" step="1" oninput="kontrolRxB(${brickId})">
+              </div>
+              <div class="add-field">
+                <label>Özel Hastane %</label>
+                <input type="number" id="b${brickId}-inp-ozel" placeholder="0" step="1" oninput="kontrolRxB(${brickId})">
+              </div>
+              <div class="add-field">
+                <label>3. Basamak %</label>
+                <input type="number" id="b${brickId}-inp-b3" placeholder="0" step="1" oninput="kontrolRxB(${brickId})">
+              </div>
+              <div class="add-field">
+                <label>2. Basamak %</label>
+                <input type="number" id="b${brickId}-inp-b2" placeholder="0" step="1" oninput="kontrolRxB(${brickId})">
+              </div>
+              <div class="add-field urun-full">
+                <label>Branş Hastanesi %</label>
+                <input type="number" id="b${brickId}-inp-brans" placeholder="0" step="1" oninput="kontrolRxB(${brickId})">
+              </div>
+            </div>
+            <div class="tl-uyari" id="b${brickId}-rx-uyari" style="display:none;">⚠ Toplam %100 olmalıdır.</div>
+          </div>
+          <div class="add-col add-col-sag">
+            <div class="add-col-baslik">Ürün Bilgileri</div>
+            <div class="seg-tip-secim">
+              <label class="seg-tip-label" onclick="setSegTipB(${brickId}, 'urun')">
+                <div class="ciro-radio" id="b${brickId}-radio-seg-urun"></div>
+                <span>Ürüne Göre Segmentasyon</span>
+              </label>
+              <label class="seg-tip-label" onclick="setSegTipB(${brickId}, 'tl')">
+                <div class="ciro-radio" id="b${brickId}-radio-seg-tl"></div>
+                <span>TL'ye Göre Segmentasyon</span>
+              </label>
+            </div>
+            <div class="urun-form-grid">
+              <div class="add-field urun-full">
+                <label>Ürün Adı</label>
+                <input type="text" id="b${brickId}-inp-urun-adi" placeholder="örn. Majezik">
+              </div>
+              <div class="add-field" id="b${brickId}-field-psf">
+                <label>PSF (KDV Dahil)</label>
+                <input type="number" id="b${brickId}-inp-psf" placeholder="örn. 250.00" step="0.01" oninput="hesaplaTLB(${brickId})">
+              </div>
+              <div class="add-field" id="b${brickId}-field-dsf">
+                <label>DSF (KDV Dahil)</label>
+                <input type="number" id="b${brickId}-inp-dsf" placeholder="örn. 200.00" step="0.01" oninput="hesaplaTLB(${brickId})">
+              </div>
+              <div class="add-field" id="b${brickId}-field-sip-adet">
+                <label>Aylık Sipariş Adedi</label>
+                <input type="number" id="b${brickId}-inp-siparis-adet" placeholder="örn. 50" step="1" oninput="hesaplaTLB(${brickId})">
+              </div>
+              <div class="add-field" id="b${brickId}-field-tuk-adet">
+                <label>Aylık Tüketim Adedi</label>
+                <input type="number" id="b${brickId}-inp-tuketim-adet" placeholder="örn. 40" step="1" oninput="hesaplaTLB(${brickId})">
+              </div>
+              <div class="add-field">
+                <label>Aylık Sipariş TL</label>
+                <input type="number" id="b${brickId}-inp-siparis" placeholder="Otomatik" step="0.01">
+              </div>
+              <div class="add-field">
+                <label>Aylık Tüketim TL</label>
+                <input type="number" id="b${brickId}-inp-tuketim" placeholder="Otomatik" step="0.01">
+              </div>
+              <div class="add-field">
+                <label>Son Alım Tarihi</label>
+                <input type="date" id="b${brickId}-inp-son-alim">
+              </div>
+              <div class="add-field">
+                <label>Günlük Tüketim Adedi</label>
+                <input type="number" id="b${brickId}-inp-gunluk-tuketim" placeholder="örn. 3" step="1">
+              </div>
+              <div class="tl-uyari urun-full" id="b${brickId}-tl-uyari" style="display:none;">⚠ Tüketim adedi, sipariş adedini aşamaz.</div>
+            </div>
+          </div>
+        </div>
+        <div class="add-footer">
+          <div class="form-error" id="b${brickId}-form-error">Lütfen tüm alanları doldurun.</div>
+          <button class="btn-add" onclick="addEczane(${brickId})">EKLE</button>
+        </div>
+      </div>
+      <div id="eczane-listesi-${brickId}"></div>
+      <div id="stok-uyari-${brickId}" style="margin-top:12px;"></div>
+    </td>
+  `;
+  row.after(formRow);
+  renderEczaneListesi(brickId);
+}
+
+function renderEczaneListesi(brickId) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  const el = document.getElementById('eczane-listesi-' + brickId);
+  if (!el) return;
+  if (!brick.eczaneler.length) {
+    el.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Henüz eczane eklenmedi.</p>';
+    return;
+  }
+  const ortC = brick.eczaneler.reduce((s,p) => s + p.ciro, 0) / brick.eczaneler.length;
+  const ortS = brick.eczaneler.reduce((s,p) => s + p.siparis, 0) / brick.eczaneler.length;
+  const ortT = brick.eczaneler.reduce((s,p) => s + p.tuketim, 0) / brick.eczaneler.length;
+  let html = `
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#f1f5f9;">
+          <th style="padding:8px;text-align:left;">#</th>
+          <th style="padding:8px;text-align:left;">Eczane Adı</th>
+          <th style="padding:8px;text-align:left;">Tahmini Ciro</th>
+          <th style="padding:8px;text-align:left;">Sipariş TL</th>
+          <th style="padding:8px;text-align:left;">Tüketim TL</th>
+          <th style="padding:8px;text-align:left;">Rx Tipi</th>
+          <th style="padding:8px;text-align:left;">ZBİ %</th>
+          <th style="padding:8px;text-align:left;">Seg.</th>
+          <th style="padding:8px;text-align:left;">Ne Yapmalısın?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  brick.eczaneler.forEach((p, i) => {
+    const cH = p.ciro    >= ortC;
+    const sH = p.siparis >= ortS;
+    const tH = p.tuketim >= ortT;
+    const seg = getSeg(cH, sH, tH);
+    html += `
+      <tr style="border-bottom:1px solid #e5e7eb;">
+        <td style="padding:8px;color:#9ca3af;">${i+1}</td>
+        <td style="padding:8px;font-weight:500;">${p.name}</td>
+        <td style="padding:8px;">${p.ciroText}</td>
+        <td style="padding:8px;">${fmtSeg(p.siparis)}</td>
+        <td style="padding:8px;">${fmtSeg(p.tuketim)}</td>
+        <td style="padding:8px;">${p.rx ? getRxSegment(p.rx) : '—'}</td>
+        <td style="padding:8px;">${p.zbi ? '%' + p.zbi.toFixed(1) : '—'}</td>
+        <td style="padding:8px;"><span class="tag ${seg.cls}">${seg.label}</span></td>
+        <td style="padding:8px;font-size:11px;">${seg.text}</td>
+        <td style="padding:8px;"><button class="btn-del" onclick="delEczane(${brickId}, ${p.id})">×</button></td>
+      </tr>`;
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+  // Stok uyarısı
+  const uyariBanner = document.getElementById('stok-uyari-' + brickId);
+  if (uyariBanner) {
+    const bugun = new Date();
+    const hedef = new Date();
+    hedef.setMonth(hedef.getMonth() + 1);
+    const uyarilar = brick.eczaneler.filter(p => {
+      const bitis = hesaplaTahminiStok(p);
+      return bitis && bitis >= bugun && bitis <= hedef;
+    });
+    if (uyarilar.length) {
+      uyariBanner.innerHTML = `
+        <div style="background:#fff8e1;border:1px solid #f59e0b;border-radius:12px;padding:16px 20px;">
+          <div style="font-family:'Bebas Neue';font-size:16px;letter-spacing:1px;color:#b45309;margin-bottom:8px;">
+            📅 Bir Sonraki Ay Ziyaret Planına Alınması Önerilen Eczaneler
+          </div>
+          <ul style="font-size:13px;color:#374151;line-height:2;padding-left:16px;">
+            ${uyarilar.map(p =>
+              `<li><strong>${p.name}</strong> — Tahmini stok bitişi: 
+               ${hesaplaTahminiStok(p).toLocaleDateString('tr-TR')}</li>`
+            ).join('')}
+          </ul>
+        </div>`;
+    } else {
+      uyariBanner.innerHTML = '';
+    }
+  }
+}
+
+function delEczane(brickId, eczaneId) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  brick.eczaneler = brick.eczaneler.filter(e => e.id !== eczaneId);
+  renderEczaneListesi(brickId);
+}
+
+function populateCiroSelect(el, tip) {
+  if (el.options.length > 1) return;
+  el.innerHTML = '<option value="">— Seçiniz —</option>';
+  const table = tip === 'iskonto' ? ISKONTO_TABLE : HIZMET_TABLE;
+  table.forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r.ciro;
+    opt.textContent = r.label;
+    el.appendChild(opt);
+  });
+}
+
+function addEczane(brickId) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  const p = 'b' + brickId + '-';
+  const name = document.getElementById(p+'inp-name').value.trim();
+  const err  = document.getElementById(p+'form-error');
+
+  // Ciro
+  const ciroMethod = brick._ciroMethod || '';
+  const ciroEl     = document.getElementById(p + 'inp-ciro-' + ciroMethod);
+  const ciroRow    = ciroEl ? getCiroRow(ciroMethod, ciroEl.value) : null;
+  if (!name || !ciroRow) { err.classList.add('show'); return; }
+
+  // Sipariş / Tüketim TL
+  const siparis = parseFloat(document.getElementById(p+'inp-siparis').value) || 0;
+  const tuketim = parseFloat(document.getElementById(p+'inp-tuketim').value) || 0;
+  if (!siparis || !tuketim) { err.classList.add('show'); return; }
+  err.classList.remove('show');
+
+  // ZBİ
+  const ziyaret       = parseFloat(document.getElementById(p+'inp-ziyaret').value) || 0;
+  const sipZiyaret    = parseFloat(document.getElementById(p+'inp-siparis-ziyaret').value) || 0;
+  const zbi           = ziyaret ? (sipZiyaret / ziyaret) * 100 : 0;
+
+  // Rx
+  const rx = {
+    ahek:  parseFloat(document.getElementById(p+'inp-ahek').value)  || 0,
+    ozel:  parseFloat(document.getElementById(p+'inp-ozel').value)  || 0,
+    b3:    parseFloat(document.getElementById(p+'inp-b3').value)    || 0,
+    b2:    parseFloat(document.getElementById(p+'inp-b2').value)    || 0,
+    brans: parseFloat(document.getElementById(p+'inp-brans').value) || 0,
+  };
+
+  // Stok
+  const sonAlim       = document.getElementById(p+'inp-son-alim').value;
+  const gunlukTuketim = parseFloat(document.getElementById(p+'inp-gunluk-tuketim').value) || 0;
+
+  brick.eczaneler.push({
+    id: Date.now(),
+    name, siparis, tuketim,
+    ciro: ciroRow.ciro, ciroText: ciroRow.text,
+    ziyaret, sipZiyaret, zbi,
+    rx, sonAlim, gunlukTuketim
+  });
+
+  // Formu temizle
+  ['inp-name','inp-ziyaret','inp-siparis-ziyaret','inp-zbi',
+   'inp-ahek','inp-ozel','inp-b3','inp-b2','inp-brans',
+   'inp-urun-adi','inp-psf','inp-dsf','inp-siparis-adet',
+   'inp-tuketim-adet','inp-siparis','inp-tuketim',
+   'inp-son-alim','inp-gunluk-tuketim'].forEach(id => {
+    const el = document.getElementById(p + id);
+    if (el) el.value = '';
+  });
+
+  renderEczaneListesi(brickId);
+}
+
+function setCiroMethodB(brickId, method) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (brick) brick._ciroMethod = method;
+  const p = 'b' + brickId + '-';
+  const iEl = document.getElementById(p+'inp-ciro-iskonto');
+  const hEl = document.getElementById(p+'inp-ciro-hizmet');
+  const rI  = document.getElementById(p+'radio-iskonto');
+  const rH  = document.getElementById(p+'radio-hizmet');
+  if (method === 'iskonto') {
+    iEl.disabled = false; hEl.disabled = true; hEl.value = '';
+    rI.classList.add('aktif'); rH.classList.remove('aktif');
+    populateCiroSelect(iEl, 'iskonto');
+  } else {
+    hEl.disabled = false; iEl.disabled = true; iEl.value = '';
+    rH.classList.add('aktif'); rI.classList.remove('aktif');
+    populateCiroSelect(hEl, 'hizmet');
+  }
+  updateEstimateB(brickId);
+}
+
+function updateEstimateB(brickId) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  const p      = 'b' + brickId + '-';
+  const method = brick._ciroMethod || '';
+  const el     = document.getElementById(p+'inp-ciro-'+method);
+  const est    = document.getElementById(p+'ciro-estimate');
+  if (!el || !est) return;
+  const row = getCiroRow(method, el.value);
+  est.textContent = row ? row.text : '';
+}
+
+function hesaplaZBIB(brickId) {
+  const p   = 'b' + brickId + '-';
+  const z   = parseFloat(document.getElementById(p+'inp-ziyaret').value) || 0;
+  const sz  = parseFloat(document.getElementById(p+'inp-siparis-ziyaret').value) || 0;
+  const el  = document.getElementById(p+'inp-zbi');
+  el.value  = z ? ((sz / z) * 100).toFixed(1) : '';
+}
+
+function kontrolRxB(brickId) {
+  const p     = 'b' + brickId + '-';
+  const toplam = ['inp-ahek','inp-ozel','inp-b3','inp-b2','inp-brans']
+    .reduce((s, id) => s + (parseFloat(document.getElementById(p+id).value) || 0), 0);
+  const uyari = document.getElementById(p+'rx-uyari');
+  uyari.style.display = (toplam > 0 && toplam !== 100) ? 'block' : 'none';
+}
+
+function setSegTipB(brickId, tip) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (brick) brick._segTip = tip;
+  const p   = 'b' + brickId + '-';
+  const rU  = document.getElementById(p+'radio-seg-urun');
+  const rT  = document.getElementById(p+'radio-seg-tl');
+  const psf = document.getElementById(p+'inp-psf');
+  const dsf = document.getElementById(p+'inp-dsf');
+  const sA  = document.getElementById(p+'inp-siparis-adet');
+  const tA  = document.getElementById(p+'inp-tuketim-adet');
+  const sip = document.getElementById(p+'inp-siparis');
+  const tuk = document.getElementById(p+'inp-tuketim');
+  if (tip === 'urun') {
+    rU.classList.add('aktif'); rT.classList.remove('aktif');
+    psf.disabled = false; dsf.disabled = false;
+    sA.disabled = false; tA.disabled = false;
+    sip.readOnly = true; sip.style.background = '#f5f7fa'; sip.style.color = '#9ca3af';
+    tuk.readOnly = true; tuk.style.background = '#f5f7fa'; tuk.style.color = '#9ca3af';
+    sip.placeholder = 'Otomatik'; tuk.placeholder = 'Otomatik';
+    sip.value = ''; tuk.value = '';
+  } else {
+    rT.classList.add('aktif'); rU.classList.remove('aktif');
+    psf.disabled = true; dsf.disabled = true;
+    sA.disabled = true; tA.disabled = true;
+    psf.value = ''; dsf.value = ''; sA.value = ''; tA.value = '';
+    sip.readOnly = false; sip.style.background = ''; sip.style.color = '';
+    tuk.readOnly = false; tuk.style.background = ''; tuk.style.color = '';
+    sip.placeholder = 'örn. 15000'; tuk.placeholder = 'örn. 12000';
+    sip.value = ''; tuk.value = '';
+  }
+}
+
+function hesaplaTLB(brickId) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick || brick._segTip !== 'urun') return;
+  const p   = 'b' + brickId + '-';
+  const psf = parseFloat(document.getElementById(p+'inp-psf').value) || 0;
+  const dsf = parseFloat(document.getElementById(p+'inp-dsf').value) || 0;
+  const sA  = parseFloat(document.getElementById(p+'inp-siparis-adet').value) || 0;
+  const tA  = parseFloat(document.getElementById(p+'inp-tuketim-adet').value) || 0;
+  const sip = document.getElementById(p+'inp-siparis');
+  const tuk = document.getElementById(p+'inp-tuketim');
+  const uyari = document.getElementById(p+'tl-uyari');
+  if (sA > 0 && tA > sA) {
+    uyari.style.display = 'block';
+    document.getElementById(p+'inp-tuketim-adet').style.borderColor = '#e63946';
+    tuk.value = ''; sip.value = dsf && sA ? (dsf * sA).toFixed(2) : '';
+    return;
+  } else {
+    uyari.style.display = 'none';
+    document.getElementById(p+'inp-tuketim-adet').style.borderColor = '';
+  }
+  sip.value = dsf && sA ? (dsf * sA).toFixed(2) : '';
+  tuk.value = psf && tA ? (psf * tA).toFixed(2) : '';
 }
 
 // ══════════════════════════════════════════════
@@ -1755,7 +1959,7 @@ function renderUyariListesi() {
 function veriAktar() {
   const veri = {
     olusturulma: new Date().toISOString(),
-    eczaneler: pharmacies
+    bricks: bricks
   };
   const blob = new Blob([JSON.stringify(veri, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
@@ -1773,9 +1977,10 @@ function veriYukle(input) {
   reader.onload = function(e) {
     try {
       const veri = JSON.parse(e.target.result);
-      pharmacies = veri.eczaneler || [];
-      render();
-      alert(pharmacies.length + ' eczane başarıyla yüklendi.');
+      bricks = veri.bricks || [];
+      renderBricks();
+      const toplamEczane = bricks.reduce((s,b) => s + b.eczaneler.length, 0);
+      alert(bricks.length + ' brick, ' + toplamEczane + ' eczane başarıyla yüklendi.');
     } catch(err) {
       alert('Geçersiz dosya formatı.');
     }
