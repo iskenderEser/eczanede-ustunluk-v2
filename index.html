@@ -1836,14 +1836,14 @@ const HIZMET_TABLE = [
   { label: '9,01 ₺   (11.510.144 ₺ ve üzeri)',      ciro: 11_510_145, text: '9,01 ₺ hizmet bedeli' },
 ];
 const SEGMENTS = [
-  { n:1, action:'Sipariş al. Var olan ilişkiyi güçlü tut ve ticari avantajları sun.' },
-  { n:2, action:'İlişki gücünü koru. Ürün reçeteli ise doktorlara tanıtımı artır; OTC ise tanzim-teşhir yöntemlerini uygula.' },
-  { n:3, action:'İlişkiyi geliştir. Eczanenin ihtiyaçlarını karşılayacak ticari yararları sun.' },
-  { n:4, action:'İlişkiyi geliştir. Ürün reçeteli ise doktor reçetesini artır; değilse OTC satışını artıracak fırsatları anlat.' },
-  { n:5, action:'İlişkiyi koru. Sipariş hacmini koruyacak satış koşulları sun; tüketimi sağlayan reçete ya da tanzim-teşhir yöntemlerini destekle.' },
-  { n:6, action:'İlişkiyi koru ve derhal tüketimi artıracak reçete ya da tanzim-teşhir yöntemlerini öner.' },
-  { n:7, action:'İlişkiyi geliştir. Avantajlı satış şartları sun.' },
-  { n:8, action:'İlişki korunabilir; ancak bu eczanenin iş süreçlerine etkisini sorgula.' },
+  { n:1, cls:'high',  label:'SEG 1', action:'Sipariş al. Var olan ilişkiyi güçlü tut ve ticari avantajları sun.' },
+  { n:2, cls:'high',  label:'SEG 2', action:'İlişki gücünü koru. Ürün reçeteli ise doktorlara tanıtımı artır; OTC ise tanzim-teşhir yöntemlerini uygula.' },
+  { n:3, cls:'high',  label:'SEG 3', action:'İlişkiyi geliştir. Eczanenin ihtiyaçlarını karşılayacak ticari yararları sun.' },
+  { n:4, cls:'high',  label:'SEG 4', action:'İlişkiyi geliştir. Ürün reçeteli ise doktor reçetesini artır; değilse OTC satışını artıracak fırsatları anlat.' },
+  { n:5, cls:'low',   label:'SEG 5', action:'İlişkiyi koru. Sipariş hacmini koruyacak satış koşulları sun; tüketimi sağlayan reçete ya da tanzim-teşhir yöntemlerini destekle.' },
+  { n:6, cls:'low',   label:'SEG 6', action:'İlişkiyi koru ve derhal tüketimi artıracak reçete ya da tanzim-teşhir yöntemlerini öner.' },
+  { n:7, cls:'low',   label:'SEG 7', action:'İlişkiyi geliştir. Avantajlı satış şartları sun.' },
+  { n:8, cls:'low',   label:'SEG 8', action:'İlişki korunabilir; ancak bu eczanenin iş süreçlerine etkisini sorgula.' },
 ];
 
 let pharmacies = [];
