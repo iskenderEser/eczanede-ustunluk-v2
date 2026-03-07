@@ -1693,7 +1693,7 @@ function addEczane(brickId) {
   brick.eczaneler.push({
     id: Date.now(),
     name, siparis, tuketim,
-    ciro: ciroRow.ciro, ciroText: ciroRow.text,
+    ciro: ciroRow.ciro, ciroText: fmtSeg(ciroRow.ciro),
     ziyaret, sipZiyaret, zbi,
     rx, sonAlim, gunlukTuketim
   });
