@@ -1650,7 +1650,7 @@ function populateCiroSelect(el, tip) {
 
 function getCiroRow(method, value) {
   const table = method === 'iskonto' ? ISKONTO_TABLE : HIZMET_TABLE;
-  return table.find(r => r.ciro === parseInt(value)) || null;
+  return table[parseInt(value)] || null;
 }
 
 function addEczane(brickId) {
