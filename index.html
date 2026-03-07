@@ -981,12 +981,6 @@ input[type=number] { -moz-appearance: textfield; }
   <div class="ana-baslik">
     <span style="color:#737373;">ECZANEDE</span> <span>ÜSTÜNLÜK</span>
   </div>
-  <div class="ana-kartlar">
-    <div class="ana-kart" onclick="goster('segment')">
-      <div class="ana-kart-baslik">ECZANE <span>SEGMENTASYONU</span></div>
-      <div class="ana-kart-alt">etkililik için</div>
-    </div>
-    <div class="ana-ayrac"></div>
     <div class="ana-kart" onclick="goster('avantaj')">
       <div class="ana-kart-baslik">ECZANEDE <span>AVANTAJ</span></div>
       <div class="ana-kart-alt">verimlilik için</div>
@@ -1267,6 +1261,7 @@ input[type=number] { -moz-appearance: textfield; }
             <th>Brick TL</th>
             <th>Ürün TL</th>
             <th>BCG Pozisyonu</th>
+             <th>Eczaneler</th>
             <th></th>
           </tr>
         </thead>
@@ -1522,6 +1517,7 @@ function addBrick() {
   bricks.push({
     id: Date.now(),
     adi, brTL, urunTL
+    eczaneler: []
   });
 
   document.getElementById('inp-brick-adi').value = '';
@@ -1586,12 +1582,14 @@ function renderBricks() {
   bricks.forEach((b, i) => {
     const bcg = getBCGKuadrant(b, ortBrTL, ortUrunTL);
     const tr  = document.createElement('tr');
+    tr.setAttribute('data-brick-id', b.id);
     tr.innerHTML = `
       <td style="color:#9ca3af;font-size:12px">${i+1}</td>
       <td style="font-weight:500">${b.adi}</td>
       <td>${fmtSeg(b.brTL)}</td>
       <td>${fmtSeg(b.urunTL)}</td>
       <td><span class="tag ${bcg.cls === 'kazan' ? 'high' : bcg.cls === 'degerlendir' ? 'low' : 'mid'}">${bcg.label}</span></td>
+      <td><button class="btn-add" style="font-size:12px;padding:4px 12px;" onclick="toggleEczaneForm(${b.id})">Eczaneler</button></td>
       <td><button class="btn-del" onclick="delBrick(${b.id})">×</button></td>
     `;
     tbody.appendChild(tr);
@@ -1601,6 +1599,87 @@ function renderBricks() {
 function delBrick(id) {
   bricks = bricks.filter(b => b.id !== id);
   renderBricks();
+}
+
+function toggleEczaneForm(brickId) {
+  const existing = document.getElementById('eczane-form-' + brickId);
+  if (existing) { existing.remove(); return; }
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  const row = document.querySelector(`tr[data-brick-id="${brickId}"]`);
+  if (!row) return;
+  const formRow = document.createElement('tr');
+  formRow.id = 'eczane-form-' + brickId;
+  formRow.innerHTML = `
+    <td colspan="7" style="padding:20px;background:#f8fafc;">
+      <div style="font-family:'Bebas Neue';font-size:16px;letter-spacing:1px;margin-bottom:12px;">
+        ${brick.adi} — Eczane Ekle
+      </div>
+      <div id="eczane-listesi-${brickId}"></div>
+    </td>
+  `;
+  row.after(formRow);
+  renderEczaneListesi(brickId);
+}
+
+function renderEczaneListesi(brickId) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  const el = document.getElementById('eczane-listesi-' + brickId);
+  if (!el) return;
+  if (!brick.eczaneler.length) {
+    el.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Henüz eczane eklenmedi.</p>';
+    return;
+  }
+  const ortC = brick.eczaneler.reduce((s,p) => s + p.ciro, 0) / brick.eczaneler.length;
+  const ortS = brick.eczaneler.reduce((s,p) => s + p.siparis, 0) / brick.eczaneler.length;
+  const ortT = brick.eczaneler.reduce((s,p) => s + p.tuketim, 0) / brick.eczaneler.length;
+  let html = `
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#f1f5f9;">
+          <th style="padding:8px;text-align:left;">#</th>
+          <th style="padding:8px;text-align:left;">Eczane Adı</th>
+          <th style="padding:8px;text-align:left;">Tahmini Ciro</th>
+          <th style="padding:8px;text-align:left;">Sipariş TL</th>
+          <th style="padding:8px;text-align:left;">Tüketim TL</th>
+          <th style="padding:8px;text-align:left;">Rx Tipi</th>
+          <th style="padding:8px;text-align:left;">ZBİ %</th>
+          <th style="padding:8px;text-align:left;">Seg.</th>
+          <th style="padding:8px;text-align:left;">Ne Yapmalısın?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  brick.eczaneler.forEach((p, i) => {
+    const cH = p.ciro    >= ortC;
+    const sH = p.siparis >= ortS;
+    const tH = p.tuketim >= ortT;
+    const seg = getSeg(cH, sH, tH);
+    html += `
+      <tr style="border-bottom:1px solid #e5e7eb;">
+        <td style="padding:8px;color:#9ca3af;">${i+1}</td>
+        <td style="padding:8px;font-weight:500;">${p.name}</td>
+        <td style="padding:8px;">${p.ciroText}</td>
+        <td style="padding:8px;">${fmtSeg(p.siparis)}</td>
+        <td style="padding:8px;">${fmtSeg(p.tuketim)}</td>
+        <td style="padding:8px;">${p.rx ? getRxSegment(p.rx) : '—'}</td>
+        <td style="padding:8px;">${p.zbi ? '%' + p.zbi.toFixed(1) : '—'}</td>
+        <td style="padding:8px;"><span class="tag ${seg.cls}">${seg.label}</span></td>
+        <td style="padding:8px;font-size:11px;">${seg.text}</td>
+        <td style="padding:8px;"><button class="btn-del" onclick="delEczane(${brickId}, ${p.id})">×</button></td>
+      </tr>`;
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function delEczane(brickId, eczaneId) {
+  const brick = bricks.find(b => b.id === brickId);
+  if (!brick) return;
+  brick.eczaneler = brick.eczaneler.filter(e => e.id !== eczaneId);
+  renderEczaneListesi(brickId);
 }
 
 // ══════════════════════════════════════════════
