@@ -1740,7 +1740,7 @@ function updateEstimateB(brickId) {
   const est    = document.getElementById(p+'ciro-estimate');
   if (!el || !est) return;
   const row = getCiroRow(method, el.value);
-  est.textContent = row ? row.text : '';
+  est.textContent = row ? '→ Tahmini ciro: ' + fmtSeg(row.ciro) : '';
 }
 
 function hesaplaZBIB(brickId) {
