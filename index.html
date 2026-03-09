@@ -1558,6 +1558,7 @@ function renderEczaneListesi(brickId) {
     el.innerHTML = '<p style="font-size:13px;color:#9ca3af;">Henüz eczane eklenmedi.</p>';
     return;
   }
+
   const ortC = brick.eczaneler.reduce((s,p) => s + p.ciro, 0) / brick.eczaneler.length;
   const ortS = brick.eczaneler.reduce((s,p) => s + p.siparis, 0) / brick.eczaneler.length;
   const ortT = brick.eczaneler.reduce((s,p) => s + p.tuketim, 0) / brick.eczaneler.length;
@@ -2556,7 +2557,6 @@ function urunAdiGuncelle(p, deger) {
 }
 
 // ── TOGGLE MOD ───────────────────────────────────────────────────────────
-let modGeriOdemsiz = false;
 
 function dsfAyarla(geriOdemsiz) {
   ['u0','u1','u2'].forEach(p => {
@@ -2588,6 +2588,7 @@ function dsfManuelP(p) {
   hesaplaCiktilarP(p);
 }
 
+let modGeriOdemsiz = false;
 function toggleMod() {
   modGeriOdemsiz = !modGeriOdemsiz;
   const knob = document.getElementById('toggle-knob');
