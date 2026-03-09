@@ -2558,6 +2558,7 @@ function urunAdiGuncelle(p, deger) {
 
 
 // ── TOGGLE MOD ───────────────────────────────────────────────────────────
+let modGeriOdemsiz = false;
 
 function dsfAyarla(geriOdemsiz) {
   ['u0','u1','u2'].forEach(p => {
@@ -2589,7 +2590,6 @@ function dsfManuelP(p) {
   hesaplaCiktilarP(p);
 }
 
-let modGeriOdemsiz = false;
 function toggleMod() {
   modGeriOdemsiz = !modGeriOdemsiz;
   const knob = document.getElementById('toggle-knob');
