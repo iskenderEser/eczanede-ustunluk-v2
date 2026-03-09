@@ -2697,6 +2697,23 @@ function toggleMod() {
     // Buraya toggle kodunu kopyala
 }
 </script>
+<script>
+window.onload = function() {
+    setTimeout(function() {
+        console.log('Toggle çalıştı (kaba kuvvet)');
+        toggleMod();  // toggleModal değil, toggleMod olmalı!
+        console.log('Toggle zorla bağlandı');
+    }, 500); // 500ms bekle, DOM tam yüklensin
+};
+</script>
+
+<script>
+// Toggle fonksiyonunu burada da tanımla (yedek)
+function toggleMod() {  // toggleModal değil, toggleMod olmalı!
+    console.log('toggleMod çalıştı (yedek)');
+    // Buraya toggle kodunu kopyala
+}
+</script>
 </script>
 </body>
 </html>
