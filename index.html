@@ -2657,5 +2657,39 @@ function hesaplaOTS()            { hesaplaOTSP('u0'); }
 function hesaplaFISS()           { hesaplaFISSP('u0'); }
 function hesaplaCiktilar()       { hesaplaCiktilarP('u0'); }
 </script>
+<script>
+// Toggle'ı manuel olarak bağla
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggle-btn');
+    if (toggleBtn) {
+        toggleBtn.onclick = function(e) {
+            e.preventDefault();
+            toggleMod();
+            return false;
+        };
+    }
+    console.log('Toggle button rebind edildi', toggleBtn);
+});
+</script>
+<script>
+// EN KABA KUVVET ÇÖZÜM - Toggle'ı zorla çalıştır
+window.onload = function() {
+    setTimeout(function() {
+        const btn = document.getElementById('toggle-btn');
+        if(btn) {
+            // Eski onclick'i temizle
+            btn.onclick = null;
+            // Yeni onclick ekle
+            btn.onclick = function() { 
+                console.log('Toggle çalıştı (kaba kuvvet)');
+                toggleMod(); 
+            };
+            console.log('✅ Toggle zorla bağlandı');
+        } else {
+            console.log('❌ Toggle butonu bulunamadı');
+        }
+    }, 500); // 500ms bekle, DOM tam yüklensin
+};
+</script>
 </body>
 </html>
